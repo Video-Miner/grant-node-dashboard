@@ -1,4 +1,4 @@
-# Livepool Dashboard 
+# Grant Node Pool Dashboard 
 
 
 ```

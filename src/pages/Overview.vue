@@ -12,11 +12,6 @@
           </div>
         </card>
       </div>
-      <!-- LIVERPOOL
-      <div class="col-12">
-        <img class="center-img" src="@/assets/img/livepool.png" />
-       </div>
-       END LIVERPOOL -->
     </div>
 </div>
 </template>

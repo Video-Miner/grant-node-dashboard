@@ -2,8 +2,7 @@
   <footer class="footer">
     <div class="container-fluid">
       <div class="copyright">
-        © {{year}} made with <i class="tim-icons icon-heart-2"></i> by
-        <a href="https://www.livepool.io" target="_blank" rel="noopener">Livepool</a>
+        © {{year}} <a href="https://www.video-miner.com" target="_blank" rel="noopener">Video Miner</a>
       </div>
     </div>
   </footer>
@@ -19,7 +18,7 @@
 </script>
 <style scoped>
 a {
-  color: #00CECE !important;
+  color: #2196f3 !important;
 }
-</style>>
+</style>
 

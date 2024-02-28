@@ -4,15 +4,17 @@ import { request } from 'graphql-request'
 
 import Web3 from "web3"
 let web3 = new Web3(process.env.VUE_APP_GETH_URL)
-let rawUris = JSON.parse(process.env.VUE_APP_LIVEPOOL_API)
+let rawUris = JSON.parse(process.env.VUE_APP_OPEN_POOL_API)
 
 async function getData(urls) {
     let data = []
-    for (const uri of urls){
-        await axios.get(uri).then(function(response) {
-            data.push(response.data)
-        }).catch(function(error) {
+    for (const uri of urls) {
+        await axios.get(uri).then(function (response) {
+            if (response && response.data)
+                data.push(response.data)
+        }).catch(function (error) {
             console.log(error)
+            return data
         });
     }
     return data
@@ -29,8 +31,10 @@ export async function getTranscoders() {
     let transcoders = []
     regions.forEach(r => {
         for (let t in r) {
-            r[t]["EthAddress"] = t
-            transcoders.push(r[t])
+            if (r[t] != undefined && r[t] instanceof Object) {
+                r[t]["EthAddress"] = t
+                transcoders.push(r[t])
+            }
         }
     })
 
@@ -42,16 +46,26 @@ export async function getTranscoders() {
 function formatTranscoders(stats) {
     let transcoders = []
     for (let transcoder in stats) {
+        let trans = stats[transcoder];
+        if (trans == undefined) {
+            trans = {
+                Pending: 0.00,
+                Payout: 0.00,
+                Region: "",
+                Nodes: []
+            };
+        }
+
         transcoders.push({
-            address: stats[transcoder].EthAddress,
-            pending: web3.utils.fromWei(stats[transcoder].Pending.toString(), 'ether').substring(0, 8) + " Ξ",
-            payout: web3.utils.fromWei(stats[transcoder].Payout.toString(), 'ether').substring(0, 8) + " Ξ",
-            capacity: stats[transcoder].Nodes.reduce((total, cap) => {
+            address: trans.EthAddress,
+            pending: web3.utils.fromWei(trans.Pending.toString(), 'ether').substring(0, 8) + " Ξ",
+            payout: web3.utils.fromWei(trans.Payout.toString(), 'ether').substring(0, 8) + " Ξ",
+            capacity: trans.Nodes.reduce((total, cap) => {
                 total.Capacity += cap.Capacity
                 return total
             }).Capacity,
-            nodes: stats[transcoder].Nodes.map(t => t.Address),
-            region: stats[transcoder].Region
+            nodes: trans.Nodes.map(t => t.Address),
+            region: trans.Region
         })
     }
     return transcoders
@@ -62,7 +76,7 @@ async function poolEarnings() {
         winningTicketRedeemeds {
                 hash
                 faceValue
-                recipient(where: {id: "0xf4e8Ef0763BCB2B1aF693F5970a00050a6aC7E1B"})
+                recipient(where: {id: "0xb1c579757622d8ca7bd42542cb0325de1c8e1f8d"})
             }
         }`
 
@@ -81,7 +95,7 @@ export async function getNodeStatus() {
             uris.push(url + `/status`)
         }
         let statusses = await getData(uris)
-        
+
         let totalPayouts = statusses.map(s => web3.utils.toBN(s.TotalPayouts.toString()))
         totalPayouts = totalPayouts.reduce((p, n) => p.add(n))
         let stats = {

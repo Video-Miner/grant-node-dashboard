@@ -111,8 +111,8 @@
     ]
   },
   "sidebar": {
-    "title": "Livepool",
-    "shortTitle": "LP",
+    "title": "Grant Node Pool",
+    "shortTitle": "GNP",
     "overview": "overview",
     "dashboard": "dashboard",
     "icons": "Icons",

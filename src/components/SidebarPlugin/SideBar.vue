@@ -14,7 +14,7 @@
           <div class="logo-img"
                :class="{'logo-img-rtl': $rtl.isRTL}">
             <img
-              src="../../assets/img/livepool-logo.png"
+              src="../../assets/img/vmp-logo.svg"
               alt="">
           </div>
         </a>
@@ -47,7 +47,7 @@
     props: {
       title: {
         type: String,
-        default: "Livepool"
+        default: "Grant Node Pool"
       },
       backgroundColor: {
         type: String,
