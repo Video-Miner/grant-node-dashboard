@@ -16,7 +16,14 @@ export default {
     computed: {
         commission() { return this.$store.state.status.commission * 100 + " %" },
         lpVersion() { return this.$store.state.status.lpVersion.split("-")[0] || process.env.VUE_APP_VERSION_BACKUP },
-        totalPayouts() { return this.$store.state.status.totalPayouts.substring(0, 5) + " Ξ" }
+        totalPayouts() { 
+            let tp = this.$store.state.status.totalPayouts;
+            let output = "0.00 Ξ" ;
+            if (tp)
+                output = tp.substring(0, 5) + " Ξ" ;
+
+            return output
+         }
     }
 }
 </script>
